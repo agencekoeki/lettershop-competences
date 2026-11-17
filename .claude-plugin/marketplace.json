@@ -1,0 +1,16 @@
+{
+  "name": "lettershop-competences",
+  "description": "Les compétences de Lettershop pour préparer une enseigne, un logo ou des lettres en relief avec une IA.",
+  "owner": {
+    "name": "Lettershop",
+    "url": "https://www.lettershop.fr/"
+  },
+  "plugins": [
+    {
+      "name": "lettershop",
+      "source": "./plugins/lettershop",
+      "description": "Obtenir un aperçu réaliste de votre enseigne, puis préparer une demande de devis complète pour Lettershop.",
+      "category": "commerce"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "lettershop",
+  "displayName": "Lettershop : préparer mon enseigne avec mon IA",
+  "description": "Deux compétences qui s'enchaînent : un aperçu réaliste et fabricable de votre enseigne, puis une demande de devis complète pour Lettershop.",
+  "author": {
+    "name": "Lettershop",
+    "url": "https://www.lettershop.fr/"
+  },
+  "homepage": "https://www.lettershop.fr/",
+  "repository": "https://github.com/agencekoeki/lettershop-competences",
+  "keywords": ["enseigne", "logo", "lettres en relief", "aperçu", "devis", "lettershop"]
+}
