@@ -1,0 +1,7 @@
+# Fins de ligne LF dans le dépôt, sur toutes les plateformes
+* text=auto eol=lf
+
+# Fichiers binaires : jamais convertis
+*.zip binary
+*.png binary
+*.jpg binary

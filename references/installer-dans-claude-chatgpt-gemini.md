@@ -33,7 +33,7 @@ Sources : https://support.claude.com/en/articles/12512180-use-skills-in-claude (
 
 Les deux compétences sont dans un seul plugin, `lettershop`.
 
-**Gestes** [ne fonctionnent qu'une fois le dépôt `agencekoeki/lettershop-competences` rendu public : il est privé pour l'instant] :
+**Gestes** :
 - en une commande, à partir de Claude Code 2.1.275 (conseil donné par `claude plugin validate`) : `/plugin install lettershop --marketplace agencekoeki/lettershop-competences` ;
 - ou en deux : `/plugin marketplace add agencekoeki/lettershop-competences`, puis `/plugin install lettershop@lettershop-competences`.
 

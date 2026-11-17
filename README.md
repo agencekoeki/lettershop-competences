@@ -30,7 +30,7 @@ Chaque compétence est un dossier avec un fichier `SKILL.md`, dans le format que
 2. Customize › Skills › « + » › « + Create skill » › « Upload a skill ».
 3. Choisissez le fichier `.zip`. Recommencez pour la seconde compétence.
 
-**Claude Code** : les deux compétences sont dans un seul plugin, `lettershop`. [Ces commandes ne fonctionnent qu'une fois le dépôt `agencekoeki/lettershop-competences` rendu public : il est privé pour l'instant.]
+**Claude Code** : les deux compétences sont dans un seul plugin, `lettershop`.
 
 ```
 /plugin install lettershop --marketplace agencekoeki/lettershop-competences
@@ -74,10 +74,10 @@ Sur les offres gratuites de ChatGPT, ou si votre outil ne propose pas les compé
   python3 -m unittest discover -s outils -p "test_*.py" -v
   claude plugin validate .
   ```
-- **Les zips** de `dist/` sont reproductibles : le test vérifie, octet pour octet, qu'ils correspondent aux dossiers des compétences.
+- **Les zips** de `dist/` sont reproductibles sur toutes les plateformes : entrées triées, chemins en « / », fins de ligne normalisées, dates, permissions et système d'origine fixés, sans compression. Le test vérifie, octet pour octet, qu'ils correspondent aux dossiers des compétences, y compris quand Git a converti les fins de ligne sous Windows.
 - **La page du site** doit afficher les mêmes consignes. Pour le vérifier : `python3 outils/generer_consigne.py --verifier-html chemin/vers/la-page.html`.
 - **Les phrases-repères** (« Demande préparée avec les consignes Lettershop. », « Aperçu préparé avec les consignes Lettershop. ») servent à compter ce qui arrive grâce aux consignes. Ne les modifiez pas.
-- **L'URL du dépôt** citée dans les consignes (https://github.com/agencekoeki/lettershop-competences) est provisoire : le dépôt est privé, il sera publié plus tard. Le script le rappelle à chaque génération (`URL_DEPOT_PROVISOIRE` dans `outils/generer_consigne.py`). Quand le dépôt devient public, passez-la à `False`.
+- **L'URL du dépôt** citée dans les consignes est https://github.com/agencekoeki/lettershop-competences. Si le dépôt redevient privé, passez `URL_DEPOT_PROVISOIRE` à `True` dans `outils/generer_consigne.py` : le script rappellera à chaque génération que le lien ne marche pas pour les clients.
 - **Pas de numéro de version** dans `plugin.json` ni dans `marketplace.json` : Claude Code suit alors les commits.
 - **Une nouvelle compétence** : un dossier dans `plugins/lettershop/skills/`, une entrée dans `COMPETENCES`, un fichier de scénarios dans `tests/`. Le test refuse un dossier de compétence sans entrée.
 

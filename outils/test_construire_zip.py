@@ -5,7 +5,9 @@ Lancer depuis la racine du dépôt :
 """
 
 import io
+import shutil
 import sys
+import tempfile
 import unittest
 import zipfile
 from pathlib import Path
@@ -36,10 +38,18 @@ class TestZips(unittest.TestCase):
                 self.assertEqual({n.split("/")[0] for n in noms}, {nom})
                 self.assertIn(f"{nom}/SKILL.md", noms)
                 self.assertEqual(sum(n.endswith("SKILL.md") for n in noms), 1)
-                # le name du frontmatter est le nom du dossier, et le SKILL.md est celui du dépôt
+                # le name du frontmatter est le nom du dossier, et le SKILL.md est celui du dépôt (en LF)
                 skill = archive.read(f"{nom}/SKILL.md")
                 self.assertEqual(cz.nom_du_frontmatter(skill.decode("utf-8")), nom)
-                self.assertEqual(skill, (cz.DOSSIER_SKILLS / nom / "SKILL.md").read_bytes())
+                self.assertEqual(skill, cz.contenu_normalise(cz.DOSSIER_SKILLS / nom / "SKILL.md"))
+                self.assertNotIn(b"\r", skill)
+                # entrées triées, attributs fixes, sans compression : identiques sur toutes les plateformes
+                self.assertEqual(noms, sorted(noms))
+                for info in archive.infolist():
+                    self.assertEqual(info.create_system, cz.SYSTEME_UNIX, info.filename)
+                    self.assertEqual(info.compress_type, zipfile.ZIP_STORED, info.filename)
+                    self.assertEqual(info.date_time, cz.DATE_FIXE, info.filename)
+                    self.assertEqual(info.external_attr, 0o100644 << 16, info.filename)
                 # ni fichier caché, ni compilé, ni remontée
                 for n in noms:
                     morceaux = n.split("/")
@@ -50,6 +60,17 @@ class TestZips(unittest.TestCase):
                 self.assertLessEqual(len(noms), cz.FICHIERS_MAX)
                 self.assertLessEqual(len(contenu), cz.TAILLE_MAX)
                 self.assertLessEqual(max(n.count("/") for n in noms), 10)
+
+    def test_meme_zip_si_git_a_mis_des_fins_de_ligne_windows(self):
+        """Sous Windows, Git peut convertir les fichiers texte en CRLF : le zip doit rester identique."""
+        for nom in cz.competences():
+            with self.subTest(nom), tempfile.TemporaryDirectory() as dossier:
+                copie = Path(dossier) / "skills"
+                shutil.copytree(cz.DOSSIER_SKILLS / nom, copie / nom)
+                for fichier in (copie / nom).rglob("*"):
+                    if fichier.is_file() and fichier.suffix in cz.EXTENSIONS_TEXTE:
+                        fichier.write_bytes(fichier.read_bytes().replace(b"\n", b"\r\n"))
+                self.assertEqual(cz.construire(nom, copie), cz.construire(nom))
 
     def test_exclusion(self):
         for chemin in (".DS_Store", "references/.cache", "__pycache__/x.pyc", "a.pyc"):

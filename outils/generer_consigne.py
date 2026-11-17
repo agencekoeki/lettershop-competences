@@ -30,10 +30,10 @@ CARACTERES_INTERDITS = "[]<>&"
 
 # Passage qui parle de la compétence installable à l'IA du client, présent dans chaque consigne.
 TITRE_PASSAGE_SKILL = "La version installable de ces consignes"
-# URL du dépôt. Le dépôt existe mais il est PRIVÉ : le lien ne marche pour les clients
-# qu'une fois le dépôt rendu public. Passer URL_DEPOT_PROVISOIRE à False à ce moment-là.
+# URL du dépôt public. Si le dépôt redevient privé, repasser URL_DEPOT_PROVISOIRE à True :
+# le script rappellera alors, à chaque génération, que le lien donné aux clients ne marche pas.
 URL_DEPOT = "https://github.com/agencekoeki/lettershop-competences"
-URL_DEPOT_PROVISOIRE = True
+URL_DEPOT_PROVISOIRE = False
 
 
 @dataclass(frozen=True)
@@ -125,8 +125,8 @@ def avertissements(consigne: str) -> list:
     messages = []
     if URL_DEPOT_PROVISOIRE and URL_DEPOT in consigne:
         messages.append(
-            f"URL provisoire : le dépôt {URL_DEPOT} existe mais il est privé ; "
-            "il sera publié plus tard. Les liens donnés aux clients ne marcheront qu'une fois le dépôt public."
+            f"URL provisoire : le dépôt {URL_DEPOT} n'est pas public. "
+            "Les liens donnés aux clients ne marcheront qu'une fois le dépôt public."
         )
     return messages
 
@@ -220,7 +220,7 @@ def main(argv=None) -> int:
     for competence in COMPETENCES:
         consigne = consignes[competence.nom]
         competence.sortie.parent.mkdir(parents=True, exist_ok=True)
-        competence.sortie.write_text(consigne, encoding="utf-8")
+        competence.sortie.write_text(consigne, encoding="utf-8", newline="\n")
         print(f"Écrit : {competence.sortie.relative_to(RACINE)} ({len(consigne)} caractères).")
     return 0
 
